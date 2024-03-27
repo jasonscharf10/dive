@@ -7,6 +7,7 @@ import pandas as pd
 from pandas import json_normalize
 
 from init_db import Database
+from sources.base import Base
 
 
 class News:
@@ -60,8 +61,13 @@ async def handle(request):
 
 async def main():
     database = Database()
+    news_api = Base(
+        "https://newsapi.org/v2/everything?q=PandaDoc&from=2024-02-28&sortBy=publishedAt&apiKey=d4444c2e781f44faafe3564c9ec4cdc0"
+    )
     print("main")
     await database.setup()
+    await news_api.api_call()
+    
 
 
 app = web.Application()
@@ -72,4 +78,3 @@ app.add_routes([web.get("/", handle), web.get("/{query}", handle)])
 if __name__ == "__main__":
     asyncio.run(main())
     web.run_app(app)
-    
