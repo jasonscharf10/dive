@@ -7,7 +7,7 @@ class Base:
 
     async def api_call(self):
         async with aiohttp.ClientSession() as session:
-            url = self.api_url
-            async with session.get(url) as response:
+            async with session.get(self.api_url) as response:
                 data = await response.json()
-                print(data)
+                print("base class")
+                return data
