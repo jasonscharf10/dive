@@ -1,13 +1,14 @@
 import aiohttp
+from init_db import Database
+import asyncio
+from aiohttp import web
+import asyncpg
 
 
 class Base:
-    def __init__(self, api_url):
-        self.api_url = api_url
-
-    async def api_call(self):
+    async def api_call(self, api_url):
         async with aiohttp.ClientSession() as session:
-            async with session.get(self.api_url) as response:
+            async with session.get(api_url) as response:
                 data = await response.json()
                 print("base class")
                 return data

@@ -1,17 +1,32 @@
-from sources.base import Base
-from pandas import json_normalize
+import aiohttp
 
 
 class NewsAPI:
-    async def parse_data(self):
-        news_api = Base("https://newsapi.org/v2/everything?q=PandaDoc&from=2024-02-29&sortBy=publishedAt&apiKey=d4444c2e781f44faafe3564c9ec4cdc0")
-        data = await news_api.api_call()
-        df = json_normalize(data, "articles")
-        df = df.reset_index()
-        print("news class")
-        return df
-        
-        
+    BASE_API_URL = "https://newsapi.org/v2/everything"
+    _data: list[dict[str]]
+
+    async def call_api(self):
+        BASE_API_URL = self.BASE_API_URL
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                BASE_API_URL
+                + "?q=PandaDoc&from=2024-03-05&sortBy=publishedAt&apiKey=d4444c2e781f44faafe3564c9ec4cdc0"
+            ) as response:
+                _data = await response.json()
+                articles = _data["articles"]
+                _data = [
+                    {
+                        "title": item["title"],
+                        "url": item["url"],
+                        "publishedAt": item["publishedAt"],
+                    }
+                    for item in articles
+                ]
+                print(_data)
+                return _data
+
+                # return json_data
+
     # def parse_data(self):
     #     url = self.api_url
     #     news_api = Base.api_call(self)
