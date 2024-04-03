@@ -1,15 +1,15 @@
 import aiohttp
-
+import asyncpg
+from init_db import Database
 
 class NewsAPI:
     BASE_API_URL = "https://newsapi.org/v2/everything"
     _data: list[dict[str]]
 
     async def call_api(self):
-        BASE_API_URL = self.BASE_API_URL
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                BASE_API_URL
+                self.BASE_API_URL
                 + "?q=PandaDoc&from=2024-03-05&sortBy=publishedAt&apiKey=d4444c2e781f44faafe3564c9ec4cdc0"
             ) as response:
                 _data = await response.json()
@@ -22,12 +22,34 @@ class NewsAPI:
                     }
                     for item in articles
                 ]
-                print(_data)
+                #print(_data)
                 return _data
+            
+    async def insert_rows(self):
+        _data = await self.call_api()
+        # results = []
+        # for item in _data:
+        #     print(item["title"])
+        async with asyncpg.create_pool(
+            host="localhost",
+            port=5432,
+            database="dive",
+            user="postgres",
+            password="postgres",
+            command_timeout=60,
+        ) as pool:
+            async with pool.acquire() as conn:
+                results = []
+                for item in _data:
+                    result = await conn.fetchrow(
+                        "insert into articles (title, url, published_date) values ($1,$2,$3) RETURNING *", item["title"], item["url"], item["publishedAt"]
+                    )
+                    results.append(result)
+                    print(results)
 
-                # return json_data
+        # if result:
+        #     output = [result]
+        # else:
+        #     output = []
 
-    # def parse_data(self):
-    #     url = self.api_url
-    #     news_api = Base.api_call(self)
-    #     print(news_api)
+        # print(output)

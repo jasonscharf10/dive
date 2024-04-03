@@ -9,7 +9,6 @@ from pandas import json_normalize
 from init_db import Database
 from sources.base import Base
 from sources.newsapi import NewsAPI
-from update_db import insert_rows
 
 
 class News:
@@ -69,9 +68,12 @@ async def main():
     # print("main")
     # await database.setup()
     news_api = NewsAPI()
-    news_result = await news_api.call_api()
-    # print (news_result)
-    # await insert_rows(news_result)
+    #news_result = await news_api.call_api()
+    # print(news_result)
+    new_rows = await news_api.insert_rows()
+    #print(new_rows)
+    # print(news_result)
+    # print(insert_rows)
 
 
 app = web.Application()
