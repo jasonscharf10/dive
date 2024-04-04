@@ -11,14 +11,6 @@ from sources.base import Base
 from sources.newsapi import NewsAPI
 
 
-class News:
-    def __init__(self, title, url, published_date, api_url):
-        self.title = title
-        self.url = url
-        self.published_date = published_date
-        self.api_url = api_url
-
-
 async def handle(request):
     query = request.match_info.get("query", "Anonymous")
     query = "PandaDoc"
@@ -61,19 +53,10 @@ async def handle(request):
 
 
 async def main():
-    # database = Database()
-    # news_api = Base(
-    #     "https://newsapi.org/v2/everything?q=PandaDoc&from=2024-02-28&sortBy=publishedAt&apiKey=d4444c2e781f44faafe3564c9ec4cdc0"
-    # )
-    # print("main")
-    # await database.setup()
+    database = Database()
+    await database.setup()
     news_api = NewsAPI()
-    #news_result = await news_api.call_api()
-    # print(news_result)
     new_rows = await news_api.insert_rows()
-    #print(new_rows)
-    # print(news_result)
-    # print(insert_rows)
 
 
 app = web.Application()
