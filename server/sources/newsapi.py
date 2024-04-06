@@ -1,35 +1,28 @@
 import aiohttp
 import asyncpg
-from init_db import Database
+from typing import Any
 
 class NewsAPI:
     BASE_API_URL = "https://newsapi.org/v2/everything"
-    _data: list[dict[str]]
+    _data: list[dict[str, Any]]
 
-    async def call_api(self):
+    async def request_data(self):
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 self.BASE_API_URL
-                + "?q=PandaDoc&from=2024-03-05&sortBy=publishedAt&apiKey=d4444c2e781f44faafe3564c9ec4cdc0"
+                + "?q=PandaDoc&from=2024-03-11&sortBy=publishedAt&apiKey=d4444c2e781f44faafe3564c9ec4cdc0"
             ) as response:
-                _data = await response.json()
-                articles = _data["articles"]
-                _data = [
+                data = await response.json(content_type=None)
+                self._data = [
                     {
                         "title": item["title"],
                         "url": item["url"],
                         "publishedAt": item["publishedAt"],
                     }
-                    for item in articles
+                    for item in data["articles"]
                 ]
-                #print(_data)
-                return _data
             
-    async def insert_rows(self):
-        _data = await self.call_api()
-        # results = []
-        # for item in _data:
-        #     print(item["title"])
+    async def save_data(self):
         async with asyncpg.create_pool(
             host="localhost",
             port=5432,
@@ -40,16 +33,15 @@ class NewsAPI:
         ) as pool:
             async with pool.acquire() as conn:
                 results = []
-                for item in _data:
+                for item in self._data:
                     result = await conn.fetchrow(
                         "insert into articles (title, url, published_date) values ($1,$2,$3) RETURNING *", item["title"], item["url"], item["publishedAt"]
                     )
                     results.append(result)
-                    print(results)
-
-        # if result:
-        #     output = [result]
-        # else:
-        #     output = []
-
-        # print(output)
+                
+                # if result:
+                #     data = [{"id": item["id"], "title": item["title"], "url": item["url"], "published_date": item["published_date"]} for item in result]
+                # else:
+                #     data = []
+                
+                # return data
