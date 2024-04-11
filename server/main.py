@@ -6,13 +6,17 @@ from init_db import Database
 from handlers.update_data import update_data
 from handlers.fetch_data import fetch_data
 
+
 async def main():
     database = Database()
     await database.setup()
 
+
 app = web.Application()
 
-app.add_routes([web.post("/update-data", update_data), web.get("/fetch-data", fetch_data)])
+app.add_routes(
+    [web.post("/update-data", update_data), web.get("/fetch-data", fetch_data)]
+)
 
 if __name__ == "__main__":
     asyncio.run(main())
