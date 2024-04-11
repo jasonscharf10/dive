@@ -38,10 +38,3 @@ class NewsAPI:
                         "insert into articles (title, url, published_date) values ($1,$2,$3) RETURNING *", item["title"], item["url"], item["publishedAt"]
                     )
                     results.append(result)
-                
-                # if result:
-                #     data = [{"id": item["id"], "title": item["title"], "url": item["url"], "published_date": item["published_date"]} for item in result]
-                # else:
-                #     data = []
-                
-                # return data
