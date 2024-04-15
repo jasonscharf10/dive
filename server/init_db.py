@@ -1,22 +1,14 @@
 import asyncpg
-import settings
+import streamlit as st
 
 
 class Database:
-    db_host = settings.DB_HOST
-    db_port = settings.DB_PORT
-    db_name = settings.DB_NAME
-    db_username = settings.DB_USERNAME
-    db_password = settings.DB_PASSWORD
+    db_url = st.secrets["DB_URL"]
 
     async def setup(self):
         """docstring"""
         async with asyncpg.create_pool(
-            host=self.db_host,
-            port=self.db_port,
-            database=self.db_name,
-            user=self.db_username,
-            password=self.db_password,
+            dsn=self.db_url,
             command_timeout=60,
         ) as pool:
             async with pool.acquire() as conn:

@@ -39,3 +39,6 @@ junit.xml
 #Jupyter Lab
 .ipynb_checkpoints/
 Untitled.ipynb
+
+#Streamlit Secrets
+client/.streamlit/secrets.toml
