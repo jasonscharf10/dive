@@ -1,6 +1,7 @@
 import asyncpg
 import settings
 
+
 class Database:
     db_host = settings.DB_HOST
     db_port = settings.DB_PORT

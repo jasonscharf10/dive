@@ -6,6 +6,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from sources.base import DataSource
 
+
 class NewsAPI(DataSource):
     async def request_data(self):
         one_month_before = date.today() + relativedelta(months=-1)
@@ -22,5 +23,3 @@ class NewsAPI(DataSource):
                     }
                     for item in data["articles"]
                 ]
-
-    

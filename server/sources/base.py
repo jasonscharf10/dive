@@ -2,6 +2,7 @@ from typing import Any
 import asyncpg
 import settings
 
+
 class DataSource:
     BASE_API_URL: str
     _data: list[dict[str, Any]]
@@ -11,11 +12,11 @@ class DataSource:
 
     async def save_data(self):
         async with asyncpg.create_pool(
-            host = settings.DB_HOST,
-            port = settings.DB_PORT,
-            database = settings.DB_NAME,
-            user = settings.DB_USERNAME,
-            password = settings.DB_PASSWORD,
+            host=settings.DB_HOST,
+            port=settings.DB_PORT,
+            database=settings.DB_NAME,
+            user=settings.DB_USERNAME,
+            password=settings.DB_PASSWORD,
             command_timeout=60,
         ) as pool:
             async with pool.acquire() as conn:
