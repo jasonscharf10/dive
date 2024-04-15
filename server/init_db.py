@@ -1,12 +1,12 @@
 import asyncpg
-
+import settings
 
 class Database:
-    db_host = "localhost"
-    db_port = 5432
-    db_name = "dive"
-    db_username = "postgres"
-    db_password = "postgres"
+    db_host = settings.DB_HOST
+    db_port = settings.DB_PORT
+    db_name = settings.DB_NAME
+    db_username = settings.DB_USERNAME
+    db_password = settings.DB_PASSWORD
 
     async def setup(self):
         """docstring"""

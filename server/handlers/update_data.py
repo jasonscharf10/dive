@@ -2,7 +2,6 @@ import aiohttp
 from aiohttp import web
 from sources.newsapi import NewsAPI
 
-
 async def update_data(request):
     """docstring"""
     news_api = NewsAPI()

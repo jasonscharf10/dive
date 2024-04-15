@@ -1,16 +1,16 @@
 import aiohttp
 import asyncpg
 from aiohttp import web
-
+import settings
 
 async def fetch_data(request):
     """docstring"""
     async with asyncpg.create_pool(
-        host="localhost",
-        port=5432,
-        database="dive",
-        user="postgres",
-        password="postgres",
+        host = settings.DB_HOST,
+        port = settings.DB_PORT,
+        database = settings.DB_NAME,
+        user = settings.DB_USERNAME,
+        password = settings.DB_PASSWORD,
         command_timeout=60,
     ) as pool:
         async with pool.acquire() as conn:

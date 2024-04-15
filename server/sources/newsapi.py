@@ -1,17 +1,17 @@
 import aiohttp
 import asyncpg
 from typing import Any
+import settings
+from datetime import date
+from dateutil.relativedelta import relativedelta
+from sources.base import DataSource
 
-
-class NewsAPI:
-    BASE_API_URL = "https://newsapi.org/v2/everything"
-    _data: list[dict[str, Any]]
-
+class NewsAPI(DataSource):
     async def request_data(self):
+        one_month_before = date.today() + relativedelta(months=-1)
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                self.BASE_API_URL
-                + "?q=PandaDoc&from=2024-03-11&sortBy=publishedAt&apiKey=d4444c2e781f44faafe3564c9ec4cdc0"
+                f"{settings.BASE_API_URL}?q=PandaDoc&from={one_month_before}&sortBy=publishedAt&apiKey={settings.NEWS_API_KEY}"
             ) as response:
                 data = await response.json(content_type=None)
                 self._data = [
@@ -23,22 +23,4 @@ class NewsAPI:
                     for item in data["articles"]
                 ]
 
-    async def save_data(self):
-        async with asyncpg.create_pool(
-            host="localhost",
-            port=5432,
-            database="dive",
-            user="postgres",
-            password="postgres",
-            command_timeout=60,
-        ) as pool:
-            async with pool.acquire() as conn:
-                results = []
-                for item in self._data:
-                    result = await conn.fetchrow(
-                        "insert into articles (title, url, published_date) values ($1,$2,$3) RETURNING *",
-                        item["title"],
-                        item["url"],
-                        item["publishedAt"],
-                    )
-                    results.append(result)
+    
