@@ -1,12 +1,17 @@
 import asyncpg
 from aiohttp import web
-import streamlit as st
+import settings
 
 
 async def fetch_data(request):
     """docstring"""
     async with asyncpg.create_pool(
-        dsn=st.secrets["DB_URL"],
+        # host=settings.DB_HOST,
+        # port=settings.DB_PORT,
+        # database=settings.DB_NAME,
+        # user=settings.DB_USERNAME,
+        # password=settings.DB_PASSWORD,
+        dsn=settings.DB_URL,
         command_timeout=60,
     ) as pool:
         async with pool.acquire() as conn:

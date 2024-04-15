@@ -11,11 +11,11 @@ import altair as alt
 async def main():
     """docstring"""
     if st.button("Refresh Data"):
-        url = "https://kfqooscp7vt8bxq87g6t2h.streamlit.app/update-data"
+        url = "http://localhost:8080/update-data"
         async with aiohttp.ClientSession() as session:
             async with session.post(url) as response:
                 text = response.text
-                url = "https://kfqooscp7vt8bxq87g6t2h.streamlit.app/fetch-data"
+                url = "http://localhost:8080/fetch-data"
                 async with session.get(url) as response:
                     data = await response.json()
                     st.title("First Streamlit Test App")

@@ -1,6 +1,6 @@
 from typing import Any
 import asyncpg
-import streamlit as st
+import settings
 
 
 class DataSource:
@@ -12,7 +12,7 @@ class DataSource:
 
     async def save_data(self):
         async with asyncpg.create_pool(
-            dsn=st.secrets["DB_URL"],
+            dsn=settings.DB_URL,
             command_timeout=60,
         ) as pool:
             async with pool.acquire() as conn:
