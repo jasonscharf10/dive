@@ -1,14 +1,31 @@
-import aiohttp
-from init_db import Database
-import asyncio
-from aiohttp import web
+from typing import Any
 import asyncpg
+import settings
 
 
-class Base:
-    async def api_call(self, api_url):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(api_url) as response:
-                data = await response.json()
-                print("base class")
-                return data
+class DataSource:
+    BASE_API_URL: str
+    _data: list[dict[str, Any]]
+
+    async def request_data(self):
+        pass
+
+    async def save_data(self):
+        async with asyncpg.create_pool(
+            host=settings.DB_HOST,
+            port=settings.DB_PORT,
+            database=settings.DB_NAME,
+            user=settings.DB_USERNAME,
+            password=settings.DB_PASSWORD,
+            command_timeout=60,
+        ) as pool:
+            async with pool.acquire() as conn:
+                results = []
+                for item in self._data:
+                    result = await conn.fetchrow(
+                        "insert into articles (title, url, published_date) values ($1,$2,$3) RETURNING *",
+                        item["title"],
+                        item["url"],
+                        item["publishedAt"],
+                    )
+                    results.append(result)
