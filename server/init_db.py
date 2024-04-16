@@ -14,11 +14,6 @@ class Database:
         """docstring"""
         async with asyncpg.create_pool(
             dsn=self.db_url,
-            # host=self.db_host,
-            # port=self.db_port,
-            # database=self.db_name,
-            # user=self.db_username,
-            # password=self.db_password,
             command_timeout=60,
         ) as pool:
             async with pool.acquire() as conn:
