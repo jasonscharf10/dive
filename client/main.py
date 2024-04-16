@@ -12,17 +12,17 @@ async def main():
     """docstring"""
     st.title("PandaDoc News Articles")
     if st.button("Refresh Data"):
-        url = "http://localhost:8080/update-data"
+        url = "https://divine-patsy-pandadoc.koyeb.app/update-data"
         async with aiohttp.ClientSession() as session:
             async with session.post(url) as response:
                 text = response.text
-                url = "http://localhost:8080/fetch-data"
+                url = "https://divine-patsy-pandadoc.koyeb.app/fetch-data"
                 async with session.get(url) as response:
                     data = await response.json()
                     chart_data = pd.DataFrame(
                         {
                             "title": [item["title"] for item in data],
-                            # "url": [item["url"] for item in data],
+                            "url": [item["url"] for item in data],
                             "published_date": [item["published_date"] for item in data],
                         }
                     )
