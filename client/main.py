@@ -10,6 +10,7 @@ import altair as alt
 
 async def main():
     """docstring"""
+    st.title("PandaDoc News Articles")
     if st.button("Refresh Data"):
         url = "http://localhost:8080/update-data"
         async with aiohttp.ClientSession() as session:
@@ -18,11 +19,10 @@ async def main():
                 url = "http://localhost:8080/fetch-data"
                 async with session.get(url) as response:
                     data = await response.json()
-                    st.title("First Streamlit Test App")
                     chart_data = pd.DataFrame(
                         {
                             "title": [item["title"] for item in data],
-                            "url": [item["url"] for item in data],
+                            # "url": [item["url"] for item in data],
                             "published_date": [item["published_date"] for item in data],
                         }
                     )
