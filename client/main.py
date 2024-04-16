@@ -12,11 +12,11 @@ async def main():
     """docstring"""
     st.title("PandaDoc News Articles")
     if st.button("Refresh Data"):
-        url = "https://jasonscharf.pythonanywhere.com/update-data"
+        url = "https://dive-qmxa.onrender.com/update-data"
         async with aiohttp.ClientSession(trust_env=True) as session:
             async with session.post(url) as response:
                 text = response.text
-                url = "https://jasonscharf.pythonanywhere.com/fetch-data"
+                url = "https://dive-qmxa.onrender.com/fetch-data"
                 async with session.get(url) as response:
                     data = await response.json()
                     chart_data = pd.DataFrame(
