@@ -12,11 +12,11 @@ async def main():
     """docstring"""
     st.title("PandaDoc News Articles")
     if st.button("Refresh Data"):
-        url = "https://divine-patsy-pandadoc.koyeb.app/update-data"
-        async with aiohttp.ClientSession() as session:
+        url = "http://15.204.162.212:8501/update-data"
+        async with aiohttp.ClientSession(trust_env=True) as session:
             async with session.post(url) as response:
                 text = response.text
-                url = "https://divine-patsy-pandadoc.koyeb.app/fetch-data"
+                url = "http://15.204.162.212:8501/fetch-data"
                 async with session.get(url) as response:
                     data = await response.json()
                     chart_data = pd.DataFrame(
