@@ -4,7 +4,6 @@ import settings
 
 
 class DataSource:
-    BASE_API_URL: str
     _data: list[dict[str, Any]]
 
     async def request_data(self):

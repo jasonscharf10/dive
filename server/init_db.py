@@ -3,11 +3,6 @@ import settings
 
 
 class Database:
-    # db_host = settings.DB_HOST
-    # db_port = settings.DB_PORT
-    # db_name = settings.DB_NAME
-    # db_username = settings.DB_USERNAME
-    # db_password = settings.DB_PASSWORD
     db_url = settings.DB_URL
 
     async def setup(self):
