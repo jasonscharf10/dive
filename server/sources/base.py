@@ -5,6 +5,7 @@ import settings
 
 class DataSource:
     _data: list[dict[str, Any]]
+    _search_param: str
 
     async def request_data(self):
         pass
@@ -18,9 +19,11 @@ class DataSource:
                 results = []
                 for item in self._data:
                     result = await conn.fetchrow(
-                        "insert into articles (title, url, published_date) values ($1,$2,$3) RETURNING *",
+                        "insert into articles (title, url, published_date, source) values ($1,$2,$3,$4) RETURNING *",
                         item["title"],
                         item["url"],
                         item["publishedAt"],
+                        item["source"],
+
                     )
                     results.append(result)

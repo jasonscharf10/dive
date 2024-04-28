@@ -4,13 +4,14 @@ from dateutil.relativedelta import relativedelta
 from sources.base import DataSource
 import settings
 
-
 class NewsAPI(DataSource):
     async def request_data(self):
+        print ({self._search_param})
         one_month_before = date.today() + relativedelta(months=-1)
+        print(f"{settings.BASE_API_URL}?q={self._search_param}&from={one_month_before}&sortBy=publishedAt&apiKey={settings.NEWS_API_KEY}")
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                f"{settings.BASE_API_URL}?q=PandaDoc&from={one_month_before}&sortBy=publishedAt&apiKey={settings.NEWS_API_KEY}"
+                f"{settings.BASE_API_URL}?q={self._search_param}&from={one_month_before}&sortBy=publishedAt&apiKey={settings.NEWS_API_KEY}"
             ) as response:
                 data = await response.json(content_type=None)
                 self._data = [
@@ -18,6 +19,8 @@ class NewsAPI(DataSource):
                         "title": item["title"],
                         "url": item["url"],
                         "publishedAt": item["publishedAt"],
+                        "source": "NewsAPI",
                     }
                     for item in data["articles"]
                 ]
+                print(self._data)
