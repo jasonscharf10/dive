@@ -31,7 +31,7 @@ async def load_data(should_force_load: bool = False):
 
 async def main():
     """docstring"""
-    st.title("PandaDoc News Articles")
+    st.title("Latest News Articles")
     search_param = st.text_input('Search parameter')
     await load_data()
     if st.button("Refresh Data"):
