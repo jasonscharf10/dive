@@ -19,7 +19,9 @@ async def fetch_data(request):
                 "title": item["title"],
                 "url": item["url"],
                 "published_date": item["published_date"],
+                "source": item["source"],
             }
+
             for item in result
         ]
     else:
