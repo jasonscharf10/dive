@@ -16,12 +16,12 @@ async def fetch_data(request):
         data = [
             {
                 "id": item["id"],
+                "search_param": item["search_param"],
                 "title": item["title"],
                 "url": item["url"],
                 "published_date": item["published_date"],
                 "source": item["source"],
             }
-
             for item in result
         ]
     else:

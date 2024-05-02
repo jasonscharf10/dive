@@ -16,6 +16,7 @@ class Database:
                     """
                     CREATE TABLE IF NOT EXISTS articles (
                         id serial PRIMARY KEY,
+                        search_param varchar NULL,
                         title varchar NULL,
                         url varchar NULL,
                         published_date varchar NULL,

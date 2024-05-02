@@ -19,11 +19,11 @@ class DataSource:
                 results = []
                 for item in self._data:
                     result = await conn.fetchrow(
-                        "insert into articles (title, url, published_date, source) values ($1,$2,$3,$4) RETURNING *",
+                        "insert into articles (search_param, title, url, published_date, source) values ($1,$2,$3,$4,$5) RETURNING *",
+                        item["search_param"],
                         item["title"],
                         item["url"],
                         item["publishedAt"],
                         item["source"],
-
                     )
                     results.append(result)
