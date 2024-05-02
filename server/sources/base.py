@@ -25,6 +25,5 @@ class DataSource:
                         item["url"],
                         item["publishedAt"],
                         item["source"],
-
                     )
                     results.append(result)

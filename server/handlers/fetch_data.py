@@ -22,7 +22,6 @@ async def fetch_data(request):
                 "published_date": item["published_date"],
                 "source": item["source"],
             }
-
             for item in result
         ]
     else:
