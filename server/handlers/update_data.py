@@ -12,7 +12,6 @@ async def update_data(request):
     news_api._search_param = search_param
     reddit_api = RedditAPI()
     reddit_api._search_param = search_param
-    print(search_param)
     await reddit_api.request_data()
     await reddit_api.save_data()
     await news_api.request_data()

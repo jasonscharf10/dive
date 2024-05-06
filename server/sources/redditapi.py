@@ -2,6 +2,7 @@ from aiohttp import ClientSession
 from sources.base import DataSource
 import settings
 import praw
+import datetime
 
 
 class RedditAPI(DataSource):
@@ -31,14 +32,16 @@ class RedditAPI(DataSource):
             search_params.append(self._search_param)
             titles.append(submission.title)
             urls.append(submission.permalink)
-            publishedAts.append(str(submission.created_utc))
+            publishedAts.append(
+                datetime.datetime.fromtimestamp(submission.created_utc).date()
+            )
             sources.append("RedditAPI")
 
         self._data = [
             {
                 "search_param": search_param,
                 "title": title,
-                "url": url,
+                "url": f"https://reddit.com{url}",
                 "publishedAt": publishedAt,
                 "source": source,
             }

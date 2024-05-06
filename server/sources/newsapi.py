@@ -1,5 +1,6 @@
 from datetime import date
 import aiohttp
+from dateutil import parser
 from dateutil.relativedelta import relativedelta
 from sources.base import DataSource
 import settings
@@ -21,9 +22,8 @@ class NewsAPI(DataSource):
                         "search_param": self._search_param,
                         "title": item["title"],
                         "url": item["url"],
-                        "publishedAt": item["publishedAt"],
+                        "publishedAt": parser.parse(item["publishedAt"]).date(),
                         "source": "NewsAPI",
                     }
                     for item in data["articles"]
                 ]
-                print(self._data)

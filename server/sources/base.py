@@ -19,7 +19,10 @@ class DataSource:
                 results = []
                 for item in self._data:
                     result = await conn.fetchrow(
-                        "insert into articles (search_param, title, url, published_date, source) values ($1,$2,$3,$4,$5) RETURNING *",
+                        "INSERT INTO articles (search_param, title, url, published_date, source) "
+                        "VALUES ($1, $2, $3, $4, $5) "
+                        "ON CONFLICT (url) DO NOTHING "
+                        "RETURNING *",
                         item["search_param"],
                         item["title"],
                         item["url"],
