@@ -18,8 +18,8 @@ class Database:
                         id serial PRIMARY KEY,
                         search_param varchar NULL,
                         title varchar NULL,
-                        url varchar NULL,
-                        published_date varchar NULL,
+                        url varchar UNIQUE NULL,
+                        published_date date NULL,
                         source varchar NULL
                     )
                 """
