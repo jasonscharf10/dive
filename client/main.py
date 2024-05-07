@@ -84,7 +84,7 @@ async def load_data(search_param, should_force_load: bool = False):
 
 async def main():
     """docstring"""
-    nltk.download("all")
+    nltk.download('vader_lexicon')
     st.title("News Articles Sentiment Analysis")
     search_param = st.text_input("Search parameter")
     await load_data(search_param)
