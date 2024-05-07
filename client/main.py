@@ -14,6 +14,8 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
+nltk.download("all")
+
 
 def preprocess_text(text):
 
@@ -84,7 +86,6 @@ async def load_data(search_param, should_force_load: bool = False):
 
 async def main():
     """docstring"""
-    nltk.download('vader_lexicon')
     st.title("News Articles Sentiment Analysis")
     search_param = st.text_input("Search parameter")
     await load_data(search_param)
@@ -97,7 +98,9 @@ async def main():
                 text = response.text
                 await load_data(search_param, should_force_load=True)
     avg_sentiment = st.session_state["chart_data"].loc[:, "sentiment"].mean()
-    st.write("The Average Sentiment for " + str(search_param) + " is " + str(avg_sentiment))
+    st.write(
+        "The Average Sentiment for " + str(search_param) + " is " + str(avg_sentiment)
+    )
     st.dataframe(
         st.session_state["chart_data"],
         use_container_width=True,
