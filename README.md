@@ -39,7 +39,7 @@ python3 -m streamlit run main.py
 ## Visuals
 
 After entering a search term, click "Refresh Data". You should see both a dataframe of recent articles, as well as a chart of sentiment over time:
-![example](https://gitlab.pandadoc.com/jason.scharf/dive-into-python/-/blob/master/example.png)
+![example](example.png)
 
 ## Roadmap
 1. Add unit tests
