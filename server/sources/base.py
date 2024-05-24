@@ -26,7 +26,7 @@ class DataSource:
                         item["search_param"],
                         item["title"],
                         item["url"],
-                        item["publishedAt"],
+                        item["published_date"],
                         item["source"],
                     )
                     results.append(result)
