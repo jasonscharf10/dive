@@ -22,7 +22,7 @@ class NewsAPI(DataSource):
                         "search_param": self._search_param,
                         "title": item["title"],
                         "url": item["url"],
-                        "publishedAt": parser.parse(item["publishedAt"]).date(),
+                        "published_date": parser.parse(item["publishedAt"]).date(),
                         "source": "NewsAPI",
                     }
                     for item in data["articles"]

@@ -65,6 +65,7 @@ async def load_data(search_param, should_force_load: bool = False):
                 url, params={"search_param": search_param}
             ) as response:
                 data = await response.json(content_type=None)
+                print(data)
                 st.session_state["chart_data"] = pd.DataFrame(
                     {
                         "search_param": [item["search_param"] for item in data],

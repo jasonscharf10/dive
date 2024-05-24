@@ -19,20 +19,19 @@ class RedditAPI(DataSource):
             client_id=self.client_id,
             client_secret=self.client_secret,
             password=self.password,
-            # requestor_kwargs={"session": session},  # pass the custom Session instance
             user_agent=self.user_agent,
             username=self.username,
         )
         search_params = []
         titles = []
         urls = []
-        publishedAts = []
+        published_dates = []
         sources = []
         for submission in reddit.subreddit("all").search(self._search_param):
             search_params.append(self._search_param)
             titles.append(submission.title)
             urls.append(submission.permalink)
-            publishedAts.append(
+            published_dates.append(
                 datetime.datetime.fromtimestamp(submission.created_utc).date()
             )
             sources.append("RedditAPI")
@@ -42,10 +41,10 @@ class RedditAPI(DataSource):
                 "search_param": search_param,
                 "title": title,
                 "url": f"https://reddit.com{url}",
-                "publishedAt": publishedAt,
+                "published_date": published_date,
                 "source": source,
             }
-            for search_param, title, url, publishedAt, source in zip(
-                search_params, titles, urls, publishedAts, sources
+            for search_param, title, url, published_date, source in zip(
+                search_params, titles, urls, published_dates, sources
             )
         ]
