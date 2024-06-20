@@ -17,6 +17,7 @@ async def fetch_data(request):
                 SELECT * FROM articles 
                 WHERE search_param ILIKE $1 
                 ORDER BY published_date DESC
+
                 """,
                 search_param,
             )

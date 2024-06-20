@@ -1,7 +1,7 @@
 from aiohttp import ClientSession
 from sources.base import DataSource
 import settings
-import praw
+import asyncpraw
 import datetime
 
 
@@ -14,11 +14,12 @@ class RedditAPI(DataSource):
         self.username = settings.REDDIT_USERNAME
 
     async def request_data(self):
-        # session = ClientSession(trust_env=True)
-        reddit = praw.Reddit(
+        session = ClientSession(trust_env=True)
+        reddit = asyncpraw.Reddit(
             client_id=self.client_id,
             client_secret=self.client_secret,
             password=self.password,
+            requestor_kwargs={"session": session},
             user_agent=self.user_agent,
             username=self.username,
         )
@@ -27,7 +28,8 @@ class RedditAPI(DataSource):
         urls = []
         published_dates = []
         sources = []
-        for submission in reddit.subreddit("all").search(self._search_param):
+        subreddit = await reddit.subreddit("all")
+        async for submission in subreddit.search("Knicks"):
             search_params.append(self._search_param)
             titles.append(submission.title)
             urls.append(submission.permalink)
@@ -48,3 +50,4 @@ class RedditAPI(DataSource):
                 search_params, titles, urls, published_dates, sources
             )
         ]
+        await reddit.close()
