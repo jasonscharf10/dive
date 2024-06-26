@@ -4,7 +4,7 @@ from aiohttp import web
 
 from init_db import Database
 from handlers.fetch_data import fetch_data
-from handlers.update_data import update_data
+# from handlers.update_data import update_data
 
 
 async def main():
@@ -16,7 +16,7 @@ app = web.Application()
 
 app.add_routes(
     [
-        web.post("/update-data", update_data),
+        # web.post("/update-data", update_data),
         web.get("/fetch-data", fetch_data),
     ]
 )

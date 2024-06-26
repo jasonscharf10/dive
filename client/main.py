@@ -3,58 +3,26 @@ import asyncio
 
 import aiohttp
 
+import asyncpg
+from config import settings
+
 import streamlit as st
 import pandas as pd
-import altair as alt
-import settings
-
-import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer
-
-nltk.download("all")
 
 
-def preprocess_text(text):
-
-    # Tokenize the text
-
-    tokens = word_tokenize(text.lower())
-
-    # Remove stop words
-
-    filtered_tokens = [
-        token for token in tokens if token not in stopwords.words("english")
-    ]
-
-    # Lemmatize the tokens
-
-    lemmatizer = WordNetLemmatizer()
-
-    lemmatized_tokens = [lemmatizer.lemmatize(token) for token in filtered_tokens]
-
-    # Join the tokens back into a string
-
-    processed_text = " ".join(lemmatized_tokens)
-
-    return processed_text
-
-
-analyzer = SentimentIntensityAnalyzer()
-
-
-# create get_sentiment function
-
-
-def get_sentiment(text):
-
-    scores = analyzer.polarity_scores(text)
-
-    sentiment = scores["compound"]
-
-    return sentiment
+async def save_user_input(search_param):
+    async with asyncpg.create_pool(
+        dsn=settings.DB_URL,
+        command_timeout=60,
+    ) as pool:
+        async with pool.acquire() as conn:
+            await conn.execute(
+                """
+                    INSERT INTO user_inputs (search_param)
+                VALUES ($1)
+            """,
+                search_param,
+            )
 
 
 async def load_data(search_param, should_force_load: bool = False):
@@ -76,13 +44,6 @@ async def load_data(search_param, should_force_load: bool = False):
                     }
                 )
                 st.session_state["chart_data"].fillna("None", inplace=True)
-                st.session_state["chart_data"]["title"] = st.session_state[
-                    "chart_data"
-                ]["title"].apply(preprocess_text)
-                # apply get_sentiment function
-                st.session_state["chart_data"]["sentiment"] = st.session_state[
-                    "chart_data"
-                ]["title"].apply(get_sentiment)
 
 
 async def main():
@@ -91,17 +52,8 @@ async def main():
     search_param = st.text_input("Search parameter")
     await load_data(search_param)
     if st.button("Refresh Data"):
-        url = f"{settings.SERVER_API_BASE_URL}/update-data"
-        async with aiohttp.ClientSession(trust_env=True) as session:
-            async with session.post(
-                url, params={"search_param": search_param}
-            ) as response:
-                text = response.text
-                await load_data(search_param, should_force_load=True)
-    avg_sentiment = st.session_state["chart_data"].loc[:, "sentiment"].mean()
-    st.write(
-        "The Average Sentiment for " + str(search_param) + " is " + str(avg_sentiment)
-    )
+        await save_user_input(search_param)
+        await load_data(search_param, should_force_load=True)
     st.dataframe(
         st.session_state["chart_data"],
         use_container_width=True,
@@ -113,12 +65,6 @@ async def main():
             )
         },
     )
-    c = (
-        alt.Chart(st.session_state["chart_data"])
-        .mark_bar()
-        .encode(x="published_date", y="mean(sentiment)")
-    )
-    st.altair_chart(c, use_container_width=True)
 
 
 if __name__ == "__main__":
