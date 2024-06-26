@@ -4,7 +4,7 @@ import asyncio
 import aiohttp
 
 import asyncpg
-import settings
+from config import settings
 
 import streamlit as st
 import pandas as pd
