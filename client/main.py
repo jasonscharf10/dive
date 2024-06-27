@@ -3,26 +3,18 @@ import asyncio
 
 import aiohttp
 
-import asyncpg
-from config import settings
+import settings
 
 import streamlit as st
 import pandas as pd
 
 
 async def save_user_input(search_param):
-    async with asyncpg.create_pool(
-        dsn=settings.DB_URL,
-        command_timeout=60,
-    ) as pool:
-        async with pool.acquire() as conn:
-            await conn.execute(
-                """
-                    INSERT INTO user_inputs (search_param)
-                VALUES ($1)
-            """,
-                search_param,
-            )
+    async with aiohttp.ClientSession(trust_env=True) as session:
+        url = f"{settings.SERVER_API_BASE_URL}/save-user-input"
+        async with session.post(url, json={'search_param': search_param}) as response:
+            response_text = await response.text()
+            print(response_text)
 
 
 async def load_data(search_param, should_force_load: bool = False):
