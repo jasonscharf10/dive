@@ -1,6 +1,6 @@
 import asyncio
-from workers.news_api_worker import news_api_worker
-from workers.reddit_api_worker import reddit_api_worker
+from workers.news_api import news_api_worker
+from workers.reddit_api import reddit_api_worker
 
 async def main():
     tasks = [
