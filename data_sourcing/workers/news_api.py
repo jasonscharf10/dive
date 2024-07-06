@@ -26,7 +26,7 @@ async def news_api_worker():
             return
         print(f"Running *News API* worker for {search_param}")
         logging.info("Starting data fetch with search_param: %s", search_param)
-        news_api = NewsAPI(search_param)
+        news_api = NewsAPI()
         news_api._search_param = search_param
         await news_api.request_data()
         await news_api.save_data()
