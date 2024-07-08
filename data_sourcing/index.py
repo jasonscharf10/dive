@@ -1,13 +1,32 @@
 import asyncio
+import logging
+from aiohttp import web
 from workers.news_api import news_api_worker
 from workers.reddit_api import reddit_api_worker
 
-async def main():
+logging.basicConfig(level=logging.INFO)
+
+async def run_background_tasks():
     tasks = [
         news_api_worker(),
         reddit_api_worker()
     ]
     await asyncio.gather(*tasks)
 
+async def start_background_tasks(app):
+    app['background_tasks'] = asyncio.create_task(run_background_tasks())
+
+async def stop_background_tasks(app):
+    app['background_tasks'].cancel()
+    await app['background_tasks']
+
+async def handle(request):
+    return web.Response(text="Background tasks are running.")
+
+app = web.Application()
+app.add_routes([web.get('/', handle)])
+app.on_startup.append(start_background_tasks)
+app.on_cleanup.append(stop_background_tasks)
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    web.run_app(app)
