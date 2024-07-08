@@ -30,3 +30,11 @@ app.on_cleanup.append(stop_background_tasks)
 
 if __name__ == "__main__":
     web.run_app(app)
+else:
+    # This will make sure Vercel treats this as an ASGI app
+    import aiohttp.web_runner
+
+    runner = aiohttp.web_runner.AppRunner(app)
+    asyncio.run(runner.setup())
+    site = aiohttp.web_runner.TCPSite(runner)
+    asyncio.run(site.start())
