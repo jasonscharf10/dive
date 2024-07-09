@@ -1,42 +1,31 @@
+from http.server import BaseHTTPRequestHandler
 import asyncio
-import logging
-from aiohttp import web
+import asyncpg
+import settings
 from workers.news_api import news_api_worker
 from workers.reddit_api import reddit_api_worker
 
-logging.basicConfig(level=logging.INFO)
 
-async def run_background_tasks():
-    tasks = [
-        news_api_worker(),
-        reddit_api_worker()
-    ]
-    await asyncio.gather(*tasks)
+# async def main():
+#     tasks = []
 
-async def start_background_tasks(app):
-    app['background_tasks'] = asyncio.create_task(run_background_tasks())
+#     tasks.append(asyncio.create_task(news_api_worker()))
+#     tasks.append(asyncio.create_task(reddit_api_worker()))
 
-async def stop_background_tasks(app):
-    app['background_tasks'].cancel()
-    await app['background_tasks']
+#     await asyncio.gather(*tasks)
 
-async def handle(request):
-    return web.Response(text="Background tasks are running.")
 
-app = web.Application()
-app.add_routes([web.get('/', handle)])
-app.on_startup.append(start_background_tasks)
-app.on_cleanup.append(stop_background_tasks)
+# if __name__ == "__main__":
+#     asyncio.run(main())
 
-if __name__ == "__main__":
-    web.run_app(app)
-else:
-    import uvicorn
-    from aiohttp.web import AppRunner, TCPSite
+class handler(BaseHTTPRequestHandler):
+  tasks=[]
 
-    runner = AppRunner(app)
-    asyncio.run(runner.setup())
-    site = TCPSite(runner, host="0.0.0.0", port=8000)
-    asyncio.run(site.start())
-
-    asgi_app = app
+  async def do_GET(self):
+    self.send_response(200)
+    self.send_header('Content-type', 'text/plain')
+    self.end_headers()
+    self.tasks.append(asyncio.create_task(news_api_worker()))
+    self.tasks.append(asyncio.create_task(reddit_api_worker()))
+    await asyncio.gather(*self.tasks)
+    return
