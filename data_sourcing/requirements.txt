@@ -1,4 +1,4 @@
-aiohttp
+aiohttp_asgi
 asyncpg
 asyncpraw
 python-dateutil
