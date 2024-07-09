@@ -1,31 +1,23 @@
-from http.server import BaseHTTPRequestHandler
 import asyncio
 import asyncpg
+from aiohttp import web
 import settings
 from workers.news_api import news_api_worker
 from workers.reddit_api import reddit_api_worker
 
+async def run_tasks(request):
+    tasks = []
+    tasks.append(asyncio.create_task(news_api_worker()))
+    tasks.append(asyncio.create_task(reddit_api_worker()))
 
-# async def main():
-#     tasks = []
+    await asyncio.gather(*tasks)
 
-#     tasks.append(asyncio.create_task(news_api_worker()))
-#     tasks.append(asyncio.create_task(reddit_api_worker()))
+    return web.Response(text="Tasks completed", status=200)
 
-#     await asyncio.gather(*tasks)
+app = web.Application()
+app.add_routes([web.get('/', run_tasks)])
 
-
-# if __name__ == "__main__":
-#     asyncio.run(main())
-
-class handler(BaseHTTPRequestHandler):
-  tasks=[]
-
-  async def do_GET(self):
-    self.send_response(200)
-    self.send_header('Content-type', 'text/plain')
-    self.end_headers()
-    self.tasks.append(asyncio.create_task(news_api_worker()))
-    self.tasks.append(asyncio.create_task(reddit_api_worker()))
-    await asyncio.gather(*self.tasks)
-    return
+if __name__ == "__main__":
+    web.run_app(app)
+else:
+    asgi_app = app
