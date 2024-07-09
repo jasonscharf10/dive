@@ -1,6 +1,7 @@
-aiohttp-asgi
+aiohttp
 asyncpg
 asyncpraw
 python-dateutil
 typing_extensions
-uvicorn
+aiohttp-asgiref
+
