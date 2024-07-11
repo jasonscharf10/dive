@@ -1,6 +1,5 @@
-aiohttp
 asyncpg
 asyncpraw
 python-dateutil
 typing_extensions
-uvicorn
+sanic==19.6.0
