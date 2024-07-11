@@ -2,4 +2,4 @@ asyncpg
 asyncpraw
 python-dateutil
 typing_extensions
-sanic==19.6.0
+sanic==24.6.0
