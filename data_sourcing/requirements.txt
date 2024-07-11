@@ -3,5 +3,4 @@ asyncpg
 asyncpraw
 python-dateutil
 typing_extensions
-aiohttp-asgiref
-
+uvicorn
