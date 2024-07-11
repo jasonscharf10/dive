@@ -4,7 +4,7 @@ from workers.news_api import news_api_worker
 from workers.reddit_api import reddit_api_worker
 from sanic import Sanic, json, text
 
-app = Sanic("Data Sourcing")
+app = Sanic("DataSourcing")
  
 @app.route('/')
 async def index(request, path=""):
