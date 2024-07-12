@@ -8,15 +8,18 @@ from sanic.response import json
 app = Sanic("Data-Sourcing")
  
  
-@app.route('/')
-async def index(request, path=""):
-    return json({'hello': path})
+# @app.route('/')
+# async def index(request, path=""):
+#     return json({'hello': path})
 
-@app.route('/run_tasks')
-async def run_tasks(request):
+@app.route('/')
+async def index(request):
     tasks = [
-        asyncio.create_task(news_api_worker()),
-        asyncio.create_task(reddit_api_worker())
+    asyncio.create_task(news_api_worker()),
+    asyncio.create_task(reddit_api_worker())
     ]
     await asyncio.gather(*tasks)
     return json({"status": "tasks started"})
+
+# @app.route('/run_tasks')
+# async def run_tasks(request):
