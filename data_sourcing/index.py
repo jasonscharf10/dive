@@ -7,10 +7,6 @@ from sanic.response import json
 
 app = Sanic("Data-Sourcing")
  
- 
-# @app.route('/')
-# async def index(request, path=""):
-#     return json({'hello': path})
 
 @app.route('/')
 async def index(request):
