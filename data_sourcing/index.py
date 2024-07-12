@@ -20,6 +20,3 @@ async def index(request):
     ]
     await asyncio.gather(*tasks)
     return json({"status": "tasks started"})
-
-# @app.route('/run_tasks')
-# async def run_tasks(request):
