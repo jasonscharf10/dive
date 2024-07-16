@@ -12,7 +12,7 @@ import pandas as pd
 async def save_user_input(search_param):
     async with aiohttp.ClientSession(trust_env=True) as session:
         url = f"{settings.SERVER_API_BASE_URL}/save-user-input"
-        async with session.post(url, json={'search_param': search_param}) as response:
+        async with session.post(url, json={"search_param": search_param}) as response:
             response_text = await response.text()
             print(response_text)
 

@@ -24,7 +24,7 @@ async def reddit_api_worker():
         if not search_param:
             logging.info("No user input found, skipping data fetch.")
             return
-        
+
         print(f"Running *Reddit API* worker for {search_param}")
         logging.info("Starting data fetch with search_param: %s", search_param)
 
