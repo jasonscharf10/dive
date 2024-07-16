@@ -1,19 +1,19 @@
 import asyncio
-import asyncpg
+import aiohttp
 import settings
 from sources.newsapi import NewsAPI
 import logging
 
 
 async def fetch_user_input():
-    async with asyncpg.create_pool(dsn=settings.DB_URL) as pool:
-        async with pool.acquire() as conn:
-            result = await conn.fetchrow(
-                "SELECT search_param FROM user_inputs ORDER BY id DESC LIMIT 1"
-            )
-            if result:
-                return result["search_param"]
-            return None
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{settings.SERVER_API_BASE_URL}/fetch-user-input") as response:
+            if response.status == 200:
+                data = await response.json()
+                return data.get("search_param")
+            else:
+                logging.error("Error fetching user input: %s", response.status)
+                return None
 
 
 async def news_api_worker():
