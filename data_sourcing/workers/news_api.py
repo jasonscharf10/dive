@@ -6,7 +6,7 @@ import logging
 
 
 async def fetch_user_input():
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(trust_env=True) as session:
         async with session.get(f"{settings.SERVER_API_BASE_URL}/fetch-user-input") as response:
             if response.status == 200:
                 data = await response.json()
