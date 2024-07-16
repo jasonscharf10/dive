@@ -1,6 +1,7 @@
 from typing import Any
-import asyncpg
+import aiohttp
 import settings
+from datetime import date
 
 
 class DataSource:
@@ -10,23 +11,15 @@ class DataSource:
     async def request_data(self):
         pass
 
+    def serialize_data(self):
+        for item in self._data:
+            if isinstance(item.get("published_date"), date):
+                item["published_date"] = item["published_date"].isoformat()
+
     async def save_data(self):
-        async with asyncpg.create_pool(
-            dsn=settings.DB_URL,
-            command_timeout=60,
-        ) as pool:
-            async with pool.acquire() as conn:
-                results = []
-                for item in self._data:
-                    result = await conn.fetchrow(
-                        "INSERT INTO articles (search_param, title, url, published_date, source) "
-                        "VALUES ($1, $2, $3, $4, $5) "
-                        "ON CONFLICT (url) DO NOTHING "
-                        "RETURNING *",
-                        item["search_param"],
-                        item["title"],
-                        item["url"],
-                        item["published_date"],
-                        item["source"],
-                    )
-                    results.append(result)
+        self.serialize_data()
+        async with aiohttp.ClientSession() as session:
+            url = f"{settings.SERVER_API_BASE_URL}/save-data"
+            async with session.post(url, json=self._data) as response:
+                response_text = await response.text()
+                print(response_text)
